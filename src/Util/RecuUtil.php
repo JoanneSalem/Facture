@@ -22,24 +22,23 @@ class RecuUtil
             'Numéro de vente' => 1,
             'Nom' => 'LeDuc',
             'Ligne de commande' => array(
-                    'Produit'=> array(
+                    'Produit1'=> array(
                         'libelle'=>'lait', 
                         'quantité'=>50, 
                         'prix'=>700
                     ),
-                    'Produit'=> array(
+                    'Produit2'=> array(
                         'libelle'=>'sucre', 
                         'quantité'=>50, 
                         'prix'=>200
                     ),
-                    'Produit'=> array(
+                    'Produit3'=> array(
                         'libelle'=>'poudre', 
                         'quantité'=>20, 
                         'prix'=>1000
                     ),    
-            'Montant total'=>2000
             ),
-
+            'Montant total'=>3000
         );
 
         $facture2 = array(
@@ -65,9 +64,8 @@ class RecuUtil
                         'prix'=>1000
                     ),   
                  
-                'Montant total'=>5000
             ),
-
+            'Montant total'=>5000
         );
         
         $facture3 = array(
@@ -92,9 +90,8 @@ class RecuUtil
                         'prix'=>1000
                     ),
                  
-                'Montant total'=>10000
             ),
-
+            'Montant total'=>10000
         );
 
         $facture4 = array(
@@ -118,16 +115,13 @@ class RecuUtil
                         'quantité'=>2, 
                         'prix'=>8000
                     ),
-                    
-                
-                 
-                'Montant total'=>20000
+                     
             ),
-
+            'Montant total'=>20000
         );
 
         $listeCommande = array($facture1, $facture2, $facture3, $facture4);
-        #$listeProduit = array($produit1,);
+        
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
@@ -162,19 +156,22 @@ class RecuUtil
         $sheet->setCellValue('D'.$i, 'Quantité');
         $sheet->setCellValue('E'.$i, 'Prix Unitaire');
         $sheet->setCellValue('F'.$i, 'Total');
+        $sheet->setCellValue('A'.$i++, 'Description');
+        
 
         foreach($valeur['Ligne de commande'] as $commande){
-            foreach($commande['Produit1'] as $produit){
-                $sheet->setCellValue('A'.$i, $produit['libelle']);
-                #$sheet->setCellValue('A'.$i, $commande['quantité']);
-                #$sheet->setCellValue('A'.$i, $commande['prix']);
-            };
-            $i++;
+
+                $sheet->setCellValue('A'.$i, $commande['libelle']);
+                $sheet->setCellValue('D'.$i, $commande['quantité']);
+                $sheet->setCellValue('E'.$i, $commande['prix']);
+               
+              #  $sheet->setCellValue('F'.$i++, '0');
+               # $sheet->setCellValue('F'.$i++, '0');
+                #$sheet->setCellValue('F'.$i++, '0');
+          $i++;
         };
 
-
-        $sheet->setCellValue('A'.$i++, 'Description');
-
+       
         $sheet->setCellValue('F'.$i++, '0');
         $sheet->setCellValue('F'.$i++, '0');
         $sheet->setCellValue('F'.$i++, '0');
@@ -182,11 +179,9 @@ class RecuUtil
         $sheet->setCellValue('F'.$i++, '0');
         $sheet->setCellValue('F'.$i++, '0');
         $sheet->setCellValue('F'.$i++, '0');
-        $sheet->setCellValue('F'.$i++, '0');
-        $sheet->setCellValue('F'.$i++, '0');
-        $sheet->setCellValue('F'.$i++, '0');
-        $sheet->setCellValue('F'.$i++, '0');
+        $sheet->setCellValue('F'.$i, $valeur['Montant total']);
         $sheet->setCellValue('E'.$i++, 'TOTAL :');
+     
         
 
         $i+=4;
