@@ -7,6 +7,7 @@ use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Color as StyleColor;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx as WriterXlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
 class RecuUtil 
 {
@@ -25,18 +26,39 @@ class RecuUtil
                     'Produit1'=> array(
                         'libelle'=>'lait', 
                         'quantité'=>50, 
-                        'prix'=>700
+                        'prix'=>700,
+                        'total'=>2000
                     ),
                     'Produit2'=> array(
                         'libelle'=>'sucre', 
                         'quantité'=>50, 
-                        'prix'=>200
+                        'prix'=>200,
+                        'total'=>3000
                     ),
                     'Produit3'=> array(
                         'libelle'=>'poudre', 
                         'quantité'=>20, 
-                        'prix'=>1000
+                        'prix'=>1000,
+                        'total'=>7000
                     ),    
+                    'Produit4'=> array(
+                        'libelle'=>'soude', 
+                        'quantité'=>20, 
+                        'prix'=>1000,
+                        'total'=>8000
+                    ), 
+                    'Produit5'=> array(
+                        'libelle'=>'chausette', 
+                        'quantité'=>20, 
+                        'prix'=>1000,
+                        'total'=>6000
+                    ),    
+                    'Produit6'=> array(
+                        'libelle'=>'pipette', 
+                        'quantité'=>20, 
+                        'prix'=>1000,
+                        'total'=>7000
+                    ),       
             ),
             'Montant total'=>3000
         );
@@ -51,17 +73,20 @@ class RecuUtil
                     'Produit1'=> array(
                         'libelle'=>'lait', 
                         'quantité'=>50, 
-                        'prix'=>700
+                        'prix'=>700,
+                        'total'=>1000
                     ),
                     'Produit2'=> array(
                         'libelle'=>'glace', 
                         'quantité'=>50, 
-                        'prix'=>200
+                        'prix'=>200,
+                        'total'=>1000
                     ),
                     'Produit3'=> array(
                         'libelle'=>'jus', 
                         'quantité'=>20, 
-                        'prix'=>1000
+                        'prix'=>1000,
+                        'total'=>1000
                     ),   
                  
             ),
@@ -77,17 +102,20 @@ class RecuUtil
                     'Produit1'=> array(
                         'libelle'=>'Saucisse', 
                         'quantité'=>5, 
-                        'prix'=>700
+                        'prix'=>700,
+                        'total'=>1000
                     ),
                     'Produit2'=> array(
                         'libelle'=>'Pomme', 
                         'quantité'=>10, 
-                        'prix'=>200
+                        'prix'=>200,
+                        'total'=>1000
                     ),
                     'Produit3'=> array(
                         'libelle'=>'Haricots', 
                         'quantité'=>2, 
-                        'prix'=>1000
+                        'prix'=>1000,
+                        'total'=>1000
                     ),
                  
             ),
@@ -103,17 +131,20 @@ class RecuUtil
                     'Produit1'=> array(
                         'libelle'=>'Livre', 
                         'quantité'=>5, 
-                        'prix'=>7000
+                        'prix'=>7000,
+                        'total'=>1000
                     ),
                     'Produit2'=> array(
                         'libelle'=>'Chaussure', 
                         'quantité'=>10, 
-                        'prix'=>2000
+                        'prix'=>2000,
+                        'total'=>1000
                     ),
                     'Produit3'=> array(
                         'libelle'=>'Robe', 
                         'quantité'=>2, 
-                        'prix'=>8000
+                        'prix'=>8000,
+                        'total'=>1000
                     ),
                      
             ),
@@ -127,6 +158,15 @@ class RecuUtil
         $sheet = $spreadsheet->getActiveSheet();
 
 
+
+        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
+        #$spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
+        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
+
+
         $i=1;
         foreach($listeCommande as $valeur){
 
@@ -137,126 +177,66 @@ class RecuUtil
         $drawing->setPath('C:/wamp64/www/recu/public/logo.jpg'); 
         $drawing->setHeight(46);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
+
+
        
         $sheet->setCellValue('D'.$i, $valeur['Date']);
         $sheet->setCellValue('C'.$i++, 'Date :');
+        $spreadsheet->getActiveSheet()->getStyle('C'.$i)->getFont()->setBold(true);
         
-
-        $sheet->setCellValue('C'.$i, 'N° de Reçu :');
-        $sheet->setCellValue('D'.$i++, $valeur['Numéro de Reçu']);
+        $sheet->setCellValue('D'.$i, $valeur['Numéro de Reçu']);
+        $sheet->setCellValue('C'.$i++, 'N° de Reçu :');
+        $spreadsheet->getActiveSheet()->getStyle('C'.$i)->getFont()->setBold(true);
 
 
         $sheet->setCellValue('B'.$i, $valeur['Nom']);
+        $spreadsheet->getActiveSheet()->getStyle('C'.$i)->getFont()->setBold(true);
         $sheet->setCellValue('C'.$i, 'Vente N° :');
         $sheet->setCellValue('D'.$i, $valeur['Numéro de vente']);
+        $spreadsheet->getActiveSheet()->getStyle('A'.$i)->getFont()->setBold(true);
         $sheet->setCellValue('A'.$i++, 'Nom');
+        
 
-        
-        
+        $spreadsheet->getActiveSheet()->getStyle('A'.$i.':F'.$i)->getFill()
+        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+        ->getStartColor()->setARGB('CECECE');
+
+        $sheet->setCellValue('A'.$i, 'Description');
         $sheet->setCellValue('D'.$i, 'Quantité');
+        $spreadsheet->getActiveSheet()->getStyle('D'.$i)->getFont()->setBold(true);
         $sheet->setCellValue('E'.$i, 'Prix Unitaire');
+        $spreadsheet->getActiveSheet()->getStyle('E'.$i)->getFont()->setBold(true);
         $sheet->setCellValue('F'.$i, 'Total');
-        $sheet->setCellValue('A'.$i++, 'Description');
+        $spreadsheet->getActiveSheet()->getStyle('F'.$i)->getFont()->setBold(true);
+        $spreadsheet->getActiveSheet()->getStyle('A'.$i++)->getFont()->setBold(true);
+       
         
-
+        
+        $j=0;
         foreach($valeur['Ligne de commande'] as $commande){
 
                 $sheet->setCellValue('A'.$i, $commande['libelle']);
                 $sheet->setCellValue('D'.$i, $commande['quantité']);
                 $sheet->setCellValue('E'.$i, $commande['prix']);
-               
-              #  $sheet->setCellValue('F'.$i++, '0');
-               # $sheet->setCellValue('F'.$i++, '0');
-                #$sheet->setCellValue('F'.$i++, '0');
-          $i++;
+                $sheet->setCellValue('F'.$i, $commande['total']);      
+                $i++;
+                $j++;
+                if ($j>=11){
+                    break;
+                };
         };
 
-       
-        $sheet->setCellValue('F'.$i++, '0');
-        $sheet->setCellValue('F'.$i++, '0');
-        $sheet->setCellValue('F'.$i++, '0');
-        $sheet->setCellValue('F'.$i++, '0');
-        $sheet->setCellValue('F'.$i++, '0');
-        $sheet->setCellValue('F'.$i++, '0');
-        $sheet->setCellValue('F'.$i++, '0');
+        for($k=1; 11-$j>$k; $k++){
+            $sheet->setCellValue('F'.$i++, '0');
+        };
+
         $sheet->setCellValue('F'.$i, $valeur['Montant total']);
         $sheet->setCellValue('E'.$i++, 'TOTAL :');
      
         
-
-        $i+=4;
+        $i+=2;
         };
-        
-
-
-        $spreadsheet->getActiveSheet()->getStyle('A4:F4')->getFill()
-        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-        ->getStartColor()->setARGB('CECECE');
-
-
-
-        $spreadsheet->getActiveSheet()->getColumnDimension('A')->setAutoSize(true);
-        #$spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('F')->setAutoSize(true);
-
-
-        $spreadsheet->getActiveSheet()->getStyle('C1')->getFont()->setBold(true);
-        $spreadsheet->getActiveSheet()->getStyle('A3')->getFont()->setBold(true);
-        $spreadsheet->getActiveSheet()->getStyle('A4')->getFont()->setBold(true);
-        $spreadsheet->getActiveSheet()->getStyle('C2')->getFont()->setBold(true);
-        $spreadsheet->getActiveSheet()->getStyle('C3')->getFont()->setBold(true);
-        $spreadsheet->getActiveSheet()->getStyle('D4')->getFont()->setBold(true);
-        $spreadsheet->getActiveSheet()->getStyle('E4')->getFont()->setBold(true);
-        $spreadsheet->getActiveSheet()->getStyle('E16')->getFont()->setBold(true);
-        $spreadsheet->getActiveSheet()->getStyle('F4')->getFont()->setBold(true);
-
-
-        $spreadsheet->getActiveSheet()->getStyle('C1')
-        ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('C1')
-        ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('C1')
-        ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('C1')
-        ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-        $spreadsheet->getActiveSheet()->getStyle('C2')
-            ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('C2')
-            ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('C2')
-            ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('C2')
-            ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-        $spreadsheet->getActiveSheet()->getStyle('C3')
-            ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('C3')
-            ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('C3')
-            ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('C3')
-            ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);    
-
-        $spreadsheet->getActiveSheet()->getStyle('A4:F15')
-            ->getBorders()->getTop()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('A4:F15')
-            ->getBorders()->getBottom()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('A4:F15')
-            ->getBorders()->getLeft()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-        $spreadsheet->getActiveSheet()->getStyle('A4:F15')
-            ->getBorders()->getRight()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
-
-    
-        
-        $spreadsheet->getActiveSheet()->mergeCells('A1:A2');
-        $spreadsheet->getActiveSheet()->mergeCells('D1:F1');
-        $spreadsheet->getActiveSheet()->mergeCells('D2:F2');
-        $spreadsheet->getActiveSheet()->mergeCells('D3:F3');
-
+        $sheet->getStyle("A1:F".$i)->getFont()->setSize(5);
 
         $writer = new WriterXlsx($spreadsheet);
         $writer->save('hello world.xlsx');
